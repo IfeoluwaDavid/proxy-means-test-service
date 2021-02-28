@@ -1,0 +1,43 @@
+service: proxy-means-test-service
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: pmt-amplify-user
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+  environment: 
+    tableName: ${self:custom.tableName}
+  iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:*
+          Resource: '*'
+
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+
+plugins:
+  - serverless-offline
+
+package:
+    individually: true
+
+custom:
+  tableName: users-table
+  dynamodb:
+    stages:
+      - dev
+  serverless-offline:
+    noPrependStageInUrl: true
+
+functions:
+  function:
+    handler: lambda.handler
+    events:
+      - http:
+          path: 'proxy-means-test/{proxy+}'
+          method: any
+
+useDotenv: true
