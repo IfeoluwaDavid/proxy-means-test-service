@@ -5,5 +5,5 @@ const server = awsServerlessExpress.createServer(app)
 
 exports.handler = (event, context) => { 
     const result = awsServerlessExpress.proxy(server, event, context)
-    return result
+    return "23"
 }
